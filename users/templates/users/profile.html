@@ -80,20 +80,7 @@
             </div>
         </div>
     </div>
-    <div class="user-network">
-        <div class="followers">
-            <span><b>{{user_id.profile.followers.count}}</b></span>
-            <a class="link-style-none" href="#" data-toggle="modal" data-target="#2"><span>followers</span></a>
-        </div>
-        <div class="following">
-            <span><b>{{user_id.profile.follows.count}}</b></span>
-            <a class="link-style-none" href="#" data-toggle="modal" data-target="#3"><span>following</span></a>
-        </div>
-        <div class="followers">
-            <span><b>{{post_count}}</b></span>
-            <span>posts</span>
-        </div>
-    </div>
+   
 
 
 </div>
@@ -166,11 +153,7 @@
         	
         	
             {% empty %}
-            <div class="user-follow-status-model">
-        		<div class="user-follow-status-model-name">
-        			<a href="#" class="link-style-none">0 followers</a>
-        		</div>
-        	</div>				
+            		
         	{% endfor %}
         </div>
       
@@ -197,11 +180,7 @@
         		</div>
         	</div>
             {% empty %}
-           <div class="user-follow-status-model">
-        		<div class="user-follow-status-model-name">
-        			<a href="#" class="link-style-none">0 following</a>
-        		</div>
-        	</div>			
+           		
         	{% endfor %}
         </div>
       
