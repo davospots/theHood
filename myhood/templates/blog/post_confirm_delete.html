@@ -1,4 +1,4 @@
- {% extends "blog/base.html" %} 
+ {% extends "hood/base.html" %} 
  {% block title %}
    <title>Confirm delete * {{post.title}} - InstaClone</title> 
  {% endblock %}
@@ -15,7 +15,7 @@
             <button class="btn btn-outline-danger btn-sm" type="submit">Yes, Delete
             </button>
             <a class="btn btn-outline-secondary btn-sm"
-               href="{% url 'blog:post-detail' post.id %}">Cancel
+               href="{% url 'hood:post-detail' post.id %}">Cancel
             </a>
             <br><small>Once post deleted there is now way it can be bring back.</small>
         </div>
