@@ -1,13 +1,13 @@
 {% extends "hood/base.html" %}
 {% load crispy_forms_tags %}
  {% block title %}
-   <title>Update post * @{{request.user.username}} - InstaClone</title> 
+   <title>Update post * @{{request.user.username}} - Neighbourhood</title> 
  {% endblock %}
 {% block content %}
 
 </style>
     <div class="content-section">
-        <form action="{% url 'hood:post-update' post.pk%}" method="POST" id="post-form">
+        <form action="{% url 'myhood:post-update' post.pk%}" method="POST" id="post-form">
             {% csrf_token %}
             <fieldset class="form-group">
                 <legend class="border-bottom mb-4">Update Post</legend>
@@ -48,7 +48,7 @@
                 });
                 return xhr;
             },
-            url : "{% url 'hood:post-update' post.pk %}",
+            url : "{% url 'myhood:post-update' post.pk %}",
             type : "POST", 
             data: formData,
             processData: false,

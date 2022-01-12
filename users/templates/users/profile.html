@@ -65,7 +65,7 @@
             <div class="user-follow-status">
                 
                 {% if user_id == request.user %}
-					<a href="{% url 'hood:post-create' %}" data-toggle="tooltip" title="Add Post">
+					<a href="{% url 'myhood:post-create' %}" data-toggle="tooltip" title="Add Post">
                 		<button type="button" class="btn btn-primary btn-sm">Add Post</button>
                 	</a>
                 {% else %}
@@ -114,11 +114,11 @@
 	              </div>
 	              <p class="h-font">
 	                <a class="article-title"
-	                     href="{% url 'hood:post-detail' post.slug %}">{{ post.title }}
+	                     href="{% url 'myhood:post-detail' post.slug %}">{{ post.title }}
 	                  </a>
 	              </p>              
 	            </div>
-	            <a class="read-more" href="{% url 'hood:post-detail' post.slug %}"><small>Read More</small></a>
+	            <a class="read-more" href="{% url 'myhood:post-detail' post.slug %}"><small>Read More</small></a>
 	            <div class="post-applause">
 	              <span class="badge badge-secondary">{{post.likes.count}} Likes</span>
 	            </div>
@@ -220,7 +220,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <form action="{% url 'hood:report-user' %}" method="POST" id="report-form" name="{{user_id.id}}">
+        <form action="{% url 'myhood:report-user' %}" method="POST" id="report-form" name="{{user_id.id}}">
           {% csrf_token %}
           {{report_form | crispy}}
           <button type="submit" class="btn btn-outline-primary" style="float: right;">Report</button>
@@ -272,7 +272,7 @@ $('#report-form').on('submit',function(event){
 
     event.preventDefault();
     $.ajax({
-      url: "{% url 'hood:report-user' %}",
+      url: "{% url 'myhood:report-user' %}",
       type: "POST",
       data: {'reason':$('#id_reason').val(),'pk': $(this).attr('name'),'csrfmiddlewaretoken': '{{ csrf_token }}'},
       success: function(response) {

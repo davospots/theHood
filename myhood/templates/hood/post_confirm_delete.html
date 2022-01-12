@@ -1,6 +1,6 @@
  {% extends "hood/base.html" %} 
  {% block title %}
-   <title>Confirm delete * {{post.title}} - InstaClone</title> 
+   <title>Confirm delete * {{post.title}} - Neighbourhood</title> 
  {% endblock %}
  {% block content %}
 <div class="content-section">
@@ -15,7 +15,7 @@
             <button class="btn btn-outline-danger btn-sm" type="submit">Yes, Delete
             </button>
             <a class="btn btn-outline-secondary btn-sm"
-               href="{% url 'hood:post-detail' post.id %}">Cancel
+               href="{% url 'myhood:post-detail' post.id %}">Cancel
             </a>
             <br><small>Once post deleted there is now way it can be bring back.</small>
         </div>

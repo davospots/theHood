@@ -1,9 +1,9 @@
 {% extends "hood/base.html" %}
-{% block title %}<title> @{{request.user.username}}'s notifications- Instaclone</title>{% endblock %}
+{% block title %}<title> @{{request.user.username}}'s notifications- Neighbourhood</title>{% endblock %}
 
 {% block content %}
       <div class="content-section overflow-auto infinite-container">
-        <h1>Notifications</h1>
+        <h1>ALERTS</h1>
         {% for notification in notifications %}
           {% if notification.read %}
           <p class="notification-list-items-read infinite-item">
@@ -13,12 +13,12 @@
 
             <a href="{% url 'profile' notification.sender.username %}" style="text-decoration: blink;">{{notification.sender.username}}</a> {{notification.action}} 
             {% if notification.post %}
-             <span class="post-title-notify"><a href="{% url 'hood:post-detail' notification.post.slug %}">"{{notification.post.title}}".</a></span>
+             <span class="post-title-notify"><a href="{% url 'myhood:post-detail' notification.post.slug %}">"{{notification.post.title}}".</a></span>
             {% endif %}
              <br><small>({{notification.timestamp|date:"D, d M, g:i a"}})</small>
           </p>
         {% empty %}
-        <p class="notification-list-items-unread">No notifications yet! Welcome to InstaClone</p>
+        <p class="notification-list-items-unread">No alerts yet! Welcome to Neighbourhood</p>
         {% endfor %}
       </div>
 
@@ -34,7 +34,7 @@
         <script>
         $( document ).ready(function(){
             $.ajax({
-                url: "{% url 'hood:notifications-update' request.user.username %}",
+                url: "{% url 'myhood:notifications-update' request.user.username %}",
                 type: 'get',
                 success: function(data){
                 },

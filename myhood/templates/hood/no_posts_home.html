@@ -6,11 +6,11 @@
 	    Welcome <b>{{user.username}}</b>
 	  </div>
 	  <div class="card-body">
-	    <p class="card-text">Posts of your buddies will appear on this page.</p>
+	    <p class="card-text">Place to find all alerts within your hood.</p>
 	    <p class="card-text">To add or update your personal information <a href="{% url 'profile-update' %}">click here</a>.</p>
-	    <p>You can also search for your buddies and posts at <a href="{% url 'hood:search' %}">search</a> page.</p>
+	    <p>You can also search for alerts and posts at <a href="{% url 'myhood:search' %}">search</a> page.</p>
 	    <p>To add your first post click the button below.</p>
-	    <a href="{% url 'hood:post-create' %}" class="btn btn-primary">Add Post</a>
+	    <a href="{% url 'myhood:post-create' %}" class="btn btn-primary">Add Post</a>
 	  </div>
 	</div>
 	<br>

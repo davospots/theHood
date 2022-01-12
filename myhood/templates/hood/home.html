@@ -1,7 +1,7 @@
 {% extends "hood/base.html" %}
 {% load static %}
 {% block title %}
-  <title>InstaClone</title>
+  <title>Neighbourhood</title>
 {% endblock %}
 {% block content %}
 <div class="infinite-container">
@@ -22,12 +22,12 @@
             </div>
             <p class="h-font">
               <a class="article-title"
-                   href="{% url 'hood:post-detail' post.slug %}">{{ post.title }}
+                   href="{% url 'myhood:post-detail' post.slug %}">{{ post.title }}
                 </a>
             </p>              
           </div>
           <p class="article-content">{{ post.content|truncatewords:30}}</p>
-          <a class="read-more" href="{% url 'hood:post-detail' post.slug %}"><small>Read More</small></a>
+          <a class="read-more" href="{% url 'myhood:post-detail' post.slug %}"><small>Read More</small></a>
           <div class="post-applause">
             <span class="badge badge-secondary">{{post.likes.count}} likes</span>
           </div>
