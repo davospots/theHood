@@ -4,7 +4,7 @@
 
 ## Description
 
-Neighbourhood is a website that enables you to be in the know on what is going on in your neighbourhood.It showcases posts, alerts , and business contacs in your area
+Neighbourhood is a website that enables you to be in the know on what is going on in your neighbourhood.It showcases posts, alerts , and business contacts in your area
 
 ## Setup Requirements
 
