@@ -1,4 +1,4 @@
-# Neighborhood
+# Neighbourhood
 
 #### Created By David Mathaga
 
@@ -83,5 +83,5 @@ The following languages have been used on this project:
 
 ## Setup/Installation Requirements
 
-- Live link to view the project <a target="_blank" href="https://thehooddavos.herokuapp.com/">Neighborhood</a>
+- Live link to view the project <a target="_blank" href="https://thehooddavos.herokuapp.com/">Neighbourhood</a>
 
