@@ -41,7 +41,22 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
+      # My_apps.
+    'myhood',
+    'users.apps.UsersConfig',
+    
+
+    # Third_party_apps.
+    'crispy_forms',
+    # taggit
+    'taggit',
+    #forthumbnails
+    'imagekit', 
+    'storages',
+
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

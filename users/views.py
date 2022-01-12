@@ -6,7 +6,7 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 
 from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm,ReportUserForm
-from blog.models import Post, Notification
+from myhood.models import Post, Notification
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 

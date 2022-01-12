@@ -40,7 +40,7 @@ def home_view(request):
                     'posts': posts,
 
             }
-        return render(request, 'blog/home.html', context)
+        return render(request, 'hood/home.html', context)
     else:
         return redirect('login')
 
@@ -54,14 +54,14 @@ def post_detail_view(request,slug=None):
             comment.post=post
             comment.author=request.user
             comment.save()
-            return redirect('blog:post-detail', slug=post.slug)
+            return redirect('hood:post-detail', slug=post.slug)
     else:
         form = CommentForm()
         report_form = ReportPostForm()
         comments = Comment.objects.filter(post=post).order_by('-id')
         context = {'post':post,'form':form,'comments':comments,'report_form':report_form}
 
-    return render(request,'blog/post_detail.html',context)
+    return render(request,'hood/post_detail.html',context)
 
     
 @login_required
@@ -80,7 +80,7 @@ def post_create_view(request):
         context = {
             'form': form,
         }
-        return render(request,'blog/post_form.html',context)
+        return render(request,'hood/post_form.html',context)
 
 
 @login_required
@@ -101,7 +101,7 @@ def post_update_view(request,pk):
             'form': form,
             'post':post,
         }
-        return render(request,'blog/post_form_update.html',context)
+        return render(request,'hood/post_form_update.html',context)
 
 @login_required
 def post_delete_view(request, pk=None):
@@ -113,7 +113,7 @@ def post_delete_view(request, pk=None):
             post.delete()
             return redirect('profile', username=request.user.username)
     context = {"post":post}
-    return render(request,'blog/post_confirm_delete.html',context)
+    return render(request,'hood/post_confirm_delete.html',context)
 
 
 
@@ -141,31 +141,31 @@ def search_view(request):
             if result_posts.count() == 0 and users.count() == 0:
                 message = "No results found for: "+search_input
                 context = {'message':message,'posts':posts,'search_input':search_input}
-                return render(request,'blog/search.html',context)
+                return render(request,'hood/search.html',context)
 
             # second condition : post-yes , users-0
             elif users.count() == 0 and result_posts.count() != 0:
                 context = {'result_posts':result_posts,'search_input':search_input,'posts':posts}
-                return render(request,'blog/search.html',context)
+                return render(request,'hood/search.html',context)
 
             # 3rd condition : post-no , users-yes
             elif result_posts.count() == 0 and users.count() > 0:
                 context = {'users':users,'posts':posts,'search_input':search_input}
-                return render(request,'blog/search.html',context)
+                return render(request,'hood/search.html',context)
             
             # 4th condition : post:yes , user: yes
             else:
                 context = {'users':users,'result_posts':result_posts,'posts':posts,'search_input':search_input}
-                return render(request,'blog/search.html',context)
+                return render(request,'hood/search.html',context)
 
         except:
             message = "Unexpected Error Occured!"
             context = {'message':message}
-            return render(request,'blog/search.html',context)
+            return render(request,'hood/search.html',context)
     else:
         flag = True
         context = {'posts':posts,'flag':flag}
-        return render(request,'blog/search.html',context)
+        return render(request,'hood/search.html',context)
 
 
 @login_required
@@ -227,7 +227,7 @@ def notifications_view(request,username=None):
     except EmptyPage:
         notifications = paginator.page(paginator.num_pages)
 
-    return render(request,'blog/notifications.html',{'notifications':notifications})
+    return render(request,'hood/notifications.html',{'notifications':notifications})
 
 @login_required
 def notifications_update_view(request,username=None):

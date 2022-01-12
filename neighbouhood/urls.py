@@ -10,7 +10,7 @@ admin.site.site_header = settings.ADMIN_SITE_HEADER
 
 urlpatterns = [
     path('admin/site/', admin.site.urls), 
-    path('', include('blog.urls', namespace='blog')), 
+    path('', include('myhood.urls', namespace='myhood')), 
     path('account/register/', user_views.register, name='register'),
     path('account/profile-update/',user_views.updateProfile,name='profile-update'),
     path('account/follow-unfollow/<int:pk>/',user_views.userFollowUnfollow,name="follow-unfollow"),
