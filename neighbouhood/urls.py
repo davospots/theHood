@@ -15,7 +15,7 @@ urlpatterns = [
     path('account/profile-update/',user_views.updateProfile,name='profile-update'),
     path('account/follow-unfollow/<int:pk>/',user_views.userFollowUnfollow,name="follow-unfollow"),
     path('account/password-change/', user_views.change_password, name='change-password'),
-    path('account/login/',auth_views.LoginView.as_view(template_name='users/login.html'),name='login'), 
+    path('accounts/login/',auth_views.LoginView.as_view(template_name='users/login.html'),name='login'), 
     path('account/logout/',auth_views.LogoutView.as_view(template_name='users/logout.html'),name='logout'),  
     path('account/password-reset/',auth_views.PasswordResetView.as_view(template_name='users/password_reset.html'),name='password_reset'),  
     path('account/password-reset/done/',auth_views.PasswordResetDoneView.as_view(template_name='users/password_reset_done.html'),name='password_reset_done'),  
