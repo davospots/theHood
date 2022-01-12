@@ -9,7 +9,11 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-
+import os
+from typing import cast
+import django_heroku
+import dj_database_url
+from decouple import config,Csv
 from pathlib import Path
 
 
@@ -22,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-43@mgdchnkp8_tn=)n6_tbdb68xo(e24f64h)5(htqn@q#)z(5'
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -57,7 +61,13 @@ INSTALLED_APPS = [
 ]
 
 
+DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
+DBBACKUP_STORAGE_OPTIONS = {'location':  os.path.join(BASE_DIR, 'backup')}
+
+
+
 MIDDLEWARE = [
+    'whitenoise.middleware.WhiteNoiseMiddleware',   
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -91,13 +101,34 @@ WSGI_APPLICATION = 'neighbouhood.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+MODE=config("MODE", default="dev")
+SECRET_KEY = config('SECRET_KEY')
+DEBUG = os.environ.get('DEBUG', True)
+# development
+if config('MODE')=="dev":
+   DATABASES = {
+       'default': {
+           'ENGINE': 'django.db.backends.postgresql_psycopg2',
+           'NAME': config('DB_NAME'),
+           'USER': config('DB_USER'),
+           'PASSWORD': config('DB_PASSWORD'),
+           'HOST': config('DB_HOST'),
+           'PORT': '',
+       }
+       
+   }
+# production
+else:
+   DATABASES = {
+       'default': dj_database_url.config(
+           default=config('DATABASE_URL')
+       )
+   }
 
+db_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(db_from_env)
+
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -136,11 +167,26 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+LOGIN_REDIRECT_URL = 'blog:home'
+LOGIN_URL = 'login'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-
 ADMIN_SITE_HEADER = "NEIGHBOURHOOD"
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# Activate Django-Heroku.
+django_heroku.settings(locals())
+
+
