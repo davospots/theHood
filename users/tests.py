@@ -2,12 +2,12 @@ from django.test import TestCase
 from .models import *
 # Create your tests here.
 
-# test image class
+
 
 
 class ImageTestCase(TestCase):
     def setUp(self):
-        # create a user
+  
         user = User.objects.create(
             username='test_user',
             first_name='dav',
@@ -26,7 +26,7 @@ class ImageTestCase(TestCase):
         self.assertEqual(image.image_name, 'test_image')
 
 
-# test profile class
+
 class ProfileTestCase(TestCase):
     def setUp(self):
         # create a user
@@ -46,7 +46,7 @@ class ProfileTestCase(TestCase):
         self.assertEqual(profile.bio, 'test bio')
 
 
-# test likes class
+
 class LikesTestCase(TestCase):
     def setUp(self):
         # create a user
@@ -55,33 +55,29 @@ class LikesTestCase(TestCase):
             first_name='sdsa',
             
         )
-        # create a profile
+     
         Profile.objects.create(
             bio='test bio',
             profile_photo='static/img/homepage.jpg',
             user_id=user.id
         )
-        # create a image
+   
         image = Image.objects.create(
             image_caption='test post',
             image='https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png',
             profile_id=user.id,
             user_id=user.id
         )
-        # create a likes
-        Likes.objects.create(
-            image_id=image.id,
-            user_id=user.id
-        )
-
+       
+       
     def test_image_id(self):
-        # create a user
+       
         user = User.objects.create(
             username='newuser',
             first_name='dddd',
             
         )
-        # create a image
+       
         image = Image.objects.create(
             image_caption='test post',
             image='https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png',

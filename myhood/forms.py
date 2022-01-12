@@ -1,40 +1,18 @@
-from myhood.models import Business, Neighbourhood, Post, Profile
-from django.contrib.auth.models import User
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
 
+from .models import Comment, PostReport, Post
 
-#signupform
-class SignUpForm(UserCreationForm):
-    email = forms.EmailField()
-
-    class Meta:
-        model = User
-        fields = ['username', 'email','password1', 'password2']
-
-class NewNeighbourHoodForm(forms.ModelForm):
-    class Meta:
-        model = Neighbourhood
-        exclude = ('admin',)     
-
-
-class ProfileForm(forms.ModelForm):
-    class Meta:
-        model = Profile
-        exclude = [ 'user','neighbourhood']
-     
-#update profile form
-class UserProfileUpdateForm(forms.ModelForm):
-    email = forms.EmailField()
-    class Meta:
-        model = User
-        fields = ['username','email', ]
-        
 class PostForm(forms.ModelForm):
-    class Meta:
-        model = Post
-        exclude = ('user', 'neighbourhood')   
-class NewBusinessForm(forms.ModelForm):
-    class Meta:
-        model = Business
-        exclude = ('user', 'neighbourhood')
+	class Meta:
+		model = Post
+		fields = ['title','content','image']
+
+class CommentForm(forms.ModelForm):
+	class Meta:
+		model = Comment
+		fields = ['comment']
+
+class ReportPostForm(forms.ModelForm):
+	class Meta:
+		model = PostReport
+		fields = ['reason']

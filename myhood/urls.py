@@ -1,24 +1,20 @@
-from django.conf.urls import url
-from . import views
-from django.conf.urls.static import static
-from django.contrib.auth import views as auth_views
-from django.conf import settings
 from django.urls import path
+from . import views
 
-urlpatterns=[
-    url(r'^$',views.index, name='index'),
-    url('register/', views.register, name='registration'),
-    url('login/',auth_views.LoginView.as_view(), name='login'),
-    url('logout/', auth_views.LogoutView.as_view(template_name='registration/logout.html'), name='logout'),
-    url('profile/',views.profile, name='profile'), 
-    url('newhood/', views.create_new_neighbourhood, name='mynewhood'),
-    path('joinhood/<id>', views.join_neighbourhood, name='joinhood'),
-    path('leavehood/<id>', views.leave_neighbourhood, name='leavehood'),
-    path('single_hood/<id>', views.single_neighbourhood, name='single-hood'),
-    url('searched/', views.search_business, name='search'),
-    path('<id>/post/', views.create_post, name='post'),
-    path('<id>/business/', views.create_business, name='business'),
-    
+app_name = "blog"
+
+urlpatterns = [
+    path('', views.home_view, name='home'),  
+    path('posts/<slug:slug>/',views.post_detail_view,name='post-detail'),  
+    path('post/new/',views.post_create_view,name='post-create'),
+    path('post/<int:pk>/update/', views.post_update_view, name='post-update'),  
+    path('post/<int:pk>/delete/',views.post_delete_view, name='post-delete'), 
+    path('search/', views.search_view, name='search'), 
+    path('like/post',views.like_view,name='like'),
+    path('report/post/',views.post_report_view,name='report'),
+    path('report/user/',views.user_report_view,name='report-user'),
+    path('<str:username>/notifications/',views.notifications_view,name='notifications'),
+    path('<str:username>/notifications/update/',views.notifications_update_view,name='notifications-update'),
+    path('<str:username>/notifications/count/',views.notifications_unread_count_view,name='notifications-count'),
 ]
-if settings.DEBUG:
-    urlpatterns+= static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
+

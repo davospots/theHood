@@ -1,114 +1,117 @@
+# Third party imports.
 from django.contrib.auth.models import User
 from django.db import models
-from django.db.models.deletion import CASCADE
-
-from django.db.models.signals import post_save
+from django.urls import reverse
+from django.utils import timezone
+from PIL import Image
+from imagekit.models import ImageSpecField
+from imagekit.processors import ResizeToFill,Transpose
+from django.db.models.signals import post_save,pre_save
 from django.dispatch import receiver
-# Create your models here.
+from django.template.defaultfilters import slugify
 
-# 1. myhood class
-class Neighbourhood(models.Model):
-    admin = models.ForeignKey(User, on_delete=models.CASCADE,related_name='admin')
-    hood_name = models.CharField(max_length=60)
-    hood_location = models.CharField(max_length=60)
-    hood_description = models.TextField(max_length=150, blank=True)
-    
 
-    def __str__(self):
-        return self.hood_name
-
-    def create_neighbourhood(self):
-        self.save()  
-
-    def save_hood(self):
-        self.save()
-
-    def delete_hood(self):
-        self.delete()
-
-    @classmethod
-    def find_hood(cls, hood_id):
-        return cls.objects.filter(id=hood_id)
-
-    def update_hood(self):
-        hood_name = self.hood_name
-        self.hood_name = hood_name
-
-# 2. Userprofile
-class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    id_number = models.IntegerField(default=0)
-    email = models.CharField(max_length=30, blank=True)
-    profile_pic = CloudinaryField('profile')
-    bio = models.TextField(max_length=500, blank=True)
-    neighbourhood = models.ForeignKey(Neighbourhood, on_delete=models.CASCADE, blank=True, null=True)
-
-    def __str__(self):
-        return self.user
-
-    @classmethod
-    def get_profile(cls):
-        profile = Profile.objects.all()
-        return profile
-    
-    
-
-    def save_profile(self):
-        self.save()
-
-    def delete_profile(self):
-        self.delete()
-
-    def update_profile(cls, id):
-        Profile.objects.get(user_id=id)
-
-# 3. Business class
-class Business(models.Model): 
-    name = models.CharField(max_length=100, blank=False) 
-    user= models.ForeignKey(Profile,related_name='business_owner',on_delete=models.CASCADE,)   
-    neighbourhood_id= models.ForeignKey(Neighbourhood,related_name='business',on_delete=models.CASCADE)
-    business_email = models.CharField(max_length=50,blank=False)
-    description = models.TextField(max_length=500, blank=True)
-
-    # profile methods
-    def __str__(self):
-        return self.name
-
-    def save_business(self):
-        self.save()
-
-    def create_business(self):
-            self.save()
-
-    def delete_business(self):
-        self.delete()   
-
-    @classmethod
-    def find_business(cls,business_id):
-        business = cls.objects.get(id = business_id)
-        return business
-    @classmethod
-    def search_by_name(cls,search_term):
-    	businesses = cls.objects.filter(name__icontains=search_term)
-    	return businesses
-  
-
-# 4. post class
 class Post(models.Model):
-    title = models.CharField(max_length=60, null=True)
-    post = models.TextField()
-    user = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='postowner')
-    neighbourhood = models.ForeignKey(Neighbourhood, on_delete=models.CASCADE, related_name='hood_post')
-   
+    title = models.CharField(max_length=100)
+    slug = models.SlugField(null=True,unique=True,max_length=111)
+    content =  models.TextField()
+    image =  models.ImageField(upload_to='post_images')
+    image_thumbnail = ImageSpecField(source='image',
+                                      processors=[ 
+                                        Transpose(),
+                                        ResizeToFill(1000, 500)
+                                        ],
+                                      format='JPEG',
+                                      options={'quality': 70})
 
-   # post methods
+    date_posted = models.DateTimeField(default=timezone.now)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    likes = models.ManyToManyField(User, related_name='likes',blank=True)
+    tagged_users = models.ManyToManyField(User, related_name='tagged_users',blank=True)
+
+    @property
+    def total_likes(self):
+        return self.likes.count()
+
     def __str__(self):
-        return self.title    
+        return self.title
+
+            
+    def get_absolute_url(self):
+        return reverse('blog:post-detail', kwargs={'slug': self.slug})
+
+
+REASON = [
     
-    def save_post(self):
-        self.save()
+    ('SPAM','SPAM'),
+    ('INAPPROPRIATE','INAPPROPRIATE'),
+    
+]
 
-    def delete_post(self):
-        self.delete()        
+
+class PostReport(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    reason = models.CharField(max_length=20,choices=REASON)
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    date_reported = models.DateTimeField(default=timezone.now) 
+
+    def __str__(self):
+        return self.post.title
+
+class Comment(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    comment = models.TextField()
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    date_posted = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return self.comment
+
+class Notification(models.Model):
+    sender = models.ForeignKey(User,on_delete=models.CASCADE, related_name='sender')
+    receiver = models.ForeignKey(User,on_delete=models.CASCADE, related_name='receiver')
+    post = models.ForeignKey(Post,on_delete=models.CASCADE,null=True)
+    action = models.CharField(max_length=50, blank=True)
+    read = models.BooleanField(default=False)    
+    timestamp = models.DateTimeField(default=timezone.now)
 
 
+# SIGNALS
+@receiver(post_save,sender=Post)
+def post_mentioned_notify(sender, instance, *args, **kwargs):
+    sender = User.objects.get(pk=instance.author.pk)
+    post = Post.objects.get(pk=instance.pk)
+    string = instance.content
+    poss_users = [i  for i in string.split() if i.startswith("@")]
+    poss_users_list = []
+    for user in poss_users:
+        poss_users_list.append(user[1:])
+
+    for username in poss_users_list:
+        try:
+            get_user = User.objects.get(username=username)
+        except:
+            continue
+        if get_user in instance.tagged_users.all():
+            continue
+        elif get_user == sender:
+            continue
+        else:
+            instance.tagged_users.add(get_user)
+            notify = Notification.objects.create(sender=sender,receiver=get_user,post=post,action="mentioned you in post")
+
+
+@receiver(post_save,sender=Comment)
+def comment_added_notify(sender, instance, *args, **kwargs):
+    sender = User.objects.get(pk=instance.author.pk)
+    post = Post.objects.get(pk=instance.post.pk)
+    receiver = User.objects.get(pk=instance.post.author.pk)
+    if receiver == sender:
+        pass
+    else:
+        notify = Notification.objects.create(sender=sender,receiver=receiver,post=post,action="commented on your post")
+
+
+@receiver(pre_save,sender=Post)
+def sulg_generator(sender, instance, *args, **kwargs):
+    instance.slug = slugify(instance.title+" "+str(sender.objects.count()))
