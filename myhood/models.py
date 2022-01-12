@@ -67,6 +67,12 @@ class Comment(models.Model):
     def __str__(self):
         return self.comment
 
+class Business(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.CharField(max_length=100)
+    description = models.CharField(max_length=100)
+
+
 class Notification(models.Model):
     sender = models.ForeignKey(User,on_delete=models.CASCADE, related_name='sender')
     receiver = models.ForeignKey(User,on_delete=models.CASCADE, related_name='receiver')
