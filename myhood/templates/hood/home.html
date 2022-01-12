@@ -28,9 +28,7 @@
           </div>
           <p class="article-content">{{ post.content|truncatewords:30}}</p>
           <a class="read-more" href="{% url 'myhood:post-detail' post.slug %}"><small>Read More</small></a>
-          <div class="post-applause">
-            <span class="badge badge-secondary">{{post.likes.count}} likes</span>
-          </div>
+         
         </div>
       </article>
     {% empty %}
